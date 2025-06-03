@@ -117,17 +117,25 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res
+        .status(400)
+        .json({ success: false, error: "No token provided" });
+    }
     // Clear user session or token
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
       sameSite: "strict",
     });
-    return res.status(200).json({ message: "Logout successful" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Logout successful" });
   } catch (error) {
     return res
       .status(500)
-      .json({ error: error.message || "Internal server error" });
+      .json({ success: false, error: error.message || "Internal server error" });
   }
 };
 
@@ -141,8 +149,19 @@ export const me = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    return res.status(200).json({ user });
+    return res.status(200).json({
+      success: true,
+      message: "User data fetched successfully",
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
+    });
   } catch (error) {
-    return res.status(500).json({ error: "Internal server error" });
+    return res
+      .status(500)
+      .json({ success: false, error: "Internal server error" });
   }
 };
