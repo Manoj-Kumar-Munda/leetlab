@@ -117,12 +117,6 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      return res
-        .status(400)
-        .json({ success: false, error: "No token provided" });
-    }
     // Clear user session or token
     res.clearCookie("token", {
       httpOnly: true,
@@ -135,7 +129,10 @@ export const logout = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json({ success: false, error: error.message || "Internal server error" });
+      .json({
+        success: false,
+        error: error.message || "Internal server error",
+      });
   }
 };
 

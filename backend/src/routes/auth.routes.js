@@ -5,6 +5,7 @@ import {
   me,
   register,
 } from "../controllers/auth.controllers.js";
+import verifyToken from "../middleware/verifyToken.js";
 
 const authRoutes = express.Router();
 
@@ -12,8 +13,8 @@ authRoutes.post("/register", register);
 
 authRoutes.post("/login", login);
 
-authRoutes.post("/logout", logout);
+authRoutes.post("/logout", verifyToken, logout);
 
-authRoutes.get("/me", me);
+authRoutes.get("/me", verifyToken, me);
 
 export default authRoutes;
