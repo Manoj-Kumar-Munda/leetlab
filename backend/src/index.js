@@ -10,11 +10,10 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 import authRoutes from "./routes/auth.routes.js";
-app.use("/api/v1/auth", authRoutes);
+import healthCheck from "./controllers/health.controllers.js";
 
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
-});
+app.use("/api/v1/health", healthCheck);
+app.use("/api/v1/auth", authRoutes);
 
 app.listen(process.env.PORT || 8080, () => {
   console.log(`Server is running on port ${process.env.PORT || 8080}`);
