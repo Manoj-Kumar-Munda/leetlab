@@ -13,13 +13,44 @@ enum UserRole {
   USER
 }
 
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
 model User {
-  id    String  @id @default(uuid())
-  name  String
-  email String  @unique
-  image String?
-  role  UserRole @default(USER)
-  password String
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  image     String?
+  role      UserRole @default(USER)
+  password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  problems Problem[]
+}
+
+model Problem {
+  id                 String     @id @default(uuid())
+  title              String
+  description        String
+  difficulty         Difficulty
+  tags               String[]
+  userId             String
+  examples           Json
+  constraints        String
+  hints              String?
+  editorial          String?
+  testcases          Json
+  codeSnippets       Json
+  referenceSolutions Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //Relationships
+  // onDelete: Cascade ensures that when a User is deleted, all their Problems are also deleted
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
