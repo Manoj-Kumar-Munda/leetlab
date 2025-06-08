@@ -90,7 +90,7 @@ export const login = async (req, res) => {
         .json({ success: false, error: "Invalid credentials" });
     }
     const token = jwt.sign(
-      { id: user.id, email: user.email },
+      { id: user.id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
       {
         expiresIn: "7d",
@@ -127,12 +127,10 @@ export const logout = async (req, res) => {
       .status(200)
       .json({ success: true, message: "Logout successful" });
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        success: false,
-        error: error.message || "Internal server error",
-      });
+    return res.status(500).json({
+      success: false,
+      error: error.message || "Internal server error",
+    });
   }
 };
 
